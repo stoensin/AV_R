@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>three.js webgl - equirectangular panorama</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            background-color: #000000;
+            margin: 0px;
+            overflow: hidden;
+        }
+
+        #info {
+            position: absolute;
+            top: 0px; width: 100%;
+            color: #ffffff;
+            padding: 5px;
+            font-family:Monospace;
+            font-size:13px;
+            font-weight: bold;
+            text-align:center;
+        }
+
+        a {
+            color: #ffffff;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="container"></div>
+<div id="info">
+</div>
+
+<script src="../build/three.min.js"></script>
+<script src="../build/V-R.js"></script>
+<script>
+
+    var scene, renderer;
+
+    init();//初始化
+    animate();//动画
+
+    function init() {
+
+        var container, mesh;
+
+        V_R.init();
+
+        container = document.getElementById( 'container' );
+
+        scene = new THREE.Scene();
+
+        var axis=new THREE.AxisHelper(1);
+        scene.add(axis);
+
+        var geometry = new THREE.SphereGeometry( 500, 60, 40 );
+        geometry.scale( - 1, 1, 1 ); //x取反（面朝里）
+
+        var material = new THREE.MeshBasicMaterial( {
+            map: new THREE.TextureLoader().load( 'textures/538749b6aac79.jpg' )
+        } );
+
+        mesh = new THREE.Mesh( geometry, material );
+
+        scene.add( mesh );
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        container.appendChild( renderer.domElement );
+        window.addEventListener( 'resize', function() {
+
+            renderer.setSize( window.innerWidth, window.innerHeight );
+        }, false );
+
+
+    }
+
+
+    function animate() {
+        document.getElementById("info").innerHTML ="alpha:"+parseInt(V_R._alpha)+",beta:"+parseInt(V_R._beta)+",gama:"+parseInt(V_R._gamma)+",gammaFace:"+V_R._gammaFace;
+        requestAnimationFrame( animate );
+        update();
+
+    }
+
+    function update() {
+        V_R.update(scene,renderer);
+    }
+
+</script>
+
+</body>
+</html>

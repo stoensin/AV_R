@@ -1,0 +1,7 @@
+### Usage ###
+
+Download the [minified library](http://threejs.org/build/three.min.js) and include it in your html.
+Alternatively see [how to build the library yourself](https://github.com/mrdoob/three.js/wiki/Build-instructions).
+
+```html
+<script src="js/three.min.js"></script>

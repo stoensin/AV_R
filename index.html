@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Example 01.02 - First Scene</title>
+    <script src="build/three.min.js"></script>
+    <script src="examples/js/loaders/collada/AnimationHandler.js"></script>
+
+    <meta charset="utf-8">
+    <style>
+        body {
+            /* set margin to 0 and overflow to hidden, to go fullscreen */
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 用来保存输出结果 -->
+<div id="WebGL-output">
+</div>
+
+<script type="text/javascript">
+
+
+    // 当页面加载完成时运行初始化函数, 完成绘制
+    function init() {
+
+        var isUserInteracting = false,curentX=1,curentY=1;
+        document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+        document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+        document.addEventListener( 'mouseup', onDocumentMouseUp, false );
+        document.addEventListener( 'wheel', onDocumentMouseWheel, false );
+        // 首先创建一个场景，各种元素都将添加到场景
+        var scene = new THREE.Scene();
+        var scale=0.01 //场景缩放长度
+
+        // 创建一个我们的视角
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 80000*scale);
+
+
+
+        // 添加坐标轴到场景
+        var axes = new THREE.AxisHelper(400*scale);
+        scene.add(axes);
+
+        // 创建一个平面层
+        var planeGeometry = new THREE.PlaneGeometry(3600*scale, 3600*scale);
+        var texture=new THREE.TextureLoader().load("examples/textures/hardwood2_diffuse.jpg")//加载纹理图片
+        var planeMaterial = new THREE.MeshLambertMaterial({map:texture});
+        var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+
+
+        // 旋转并设置平面层位置
+        plane.rotation.x = -0.5 * Math.PI;
+        plane.position.x = 0;
+        plane.position.y = 0;
+        plane.position.z = 0;
+
+        plane.receiveShadow = true;
+        // 将平面层加入到场景
+        scene.add(plane);
+
+
+        // 设置视角的位置
+        camera.position.x = 3000*scale;
+        camera.position.y = 3000*scale;
+        camera.position.z = 3000*scale;
+
+        camera.lookAt(scene.position);
+
+        //添加环境光
+        var envLight=new THREE.AmbientLight(0xffffff,0.5);
+        scene.add(envLight);
+
+        // 添加聚光灯
+        var spotLight = new THREE.SpotLight(0xffffff, 1,30000*scale,2);
+        //var spotLight=new THREE.DirectionalLight(0xffffff,1)
+        spotLight.position.set(3600*scale, 2600*scale, -4600*scale);
+        spotLight.castShadow = true;
+        spotLight.shadow.camera.zoom=1;
+        //spotLight.target.position.set(-1,-1,-1);
+        //添加光线辅助线
+        scene.add(spotLight);
+        scene.add(new THREE.CameraHelper(spotLight.shadow.camera));
+        //scene.add(new THREE.DirectionalLightHelper(spotLight,50))
+
+        mixer = new THREE.AnimationMixer( scene );
+        var loader = new THREE.JSONLoader();
+        loader.load( 'examples/models/animated/monster/monster.js', function ( geometry, materials ) {
+            // adjust color a bit
+            var material = materials[ 0 ];
+            material.morphTargets = true;
+            material.color.setHex( 0xffaaaa );
+            var faceMaterial = new THREE.MultiMaterial( materials );
+            // random placement in a grid
+            mesh = new THREE.Mesh( geometry, faceMaterial );
+            mesh.scale.set( scale, scale, scale );
+            mesh.position.set( 0, 0, 0 );
+            //mesh.rotation.y = THREE.Math.randFloat( -0.25, 0.25 );
+            mesh.matrixAutoUpdate = false;
+            mesh.updateMatrix();
+            mesh.castShadow=true;
+            scene.add( mesh );
+            console.log(geometry.animations);
+            mixer.clipAction( geometry.animations[0], mesh )
+                .setDuration( 0.5 )			// one second
+                .startAt(0)	// random phase (already running)
+                .play();					// let's go
+
+        } );
+
+
+        // 创建一个渲染器
+        var renderer = new THREE.WebGLRenderer({ antialias: true });
+        //renderer.setClearColorHex();
+        renderer.setClearColor(new THREE.Color(0xEEEEEE));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled=true;
+        // 添加图形到div层
+        document.getElementById("WebGL-output").appendChild(renderer.domElement);
+
+        // 渲染场景
+        var R=5000*scale;//相机轨道半径为R
+        var x=0;//时间线
+        var clock=new THREE.Clock();
+        //var mixer = new THREE.AnimationMixer( scene );
+        function render() {
+            requestAnimationFrame(render);
+
+            var delta = clock.getDelta();
+            // animate Collada model
+            THREE.AnimationHandler.update( delta );
+            mixer.update( delta );
+
+            spotLight.position.x=R*Math.sin(x);
+            spotLight.position.z=R*Math.cos(x);
+
+            x +=0.01;
+            camera.lookAt(scene.position);
+            renderer.render(scene,camera);
+        }
+        //鼠标按下
+        function onDocumentMouseDown( event ) {
+            event.preventDefault();
+            isUserInteracting = true;
+        }
+        //鼠标拖动
+        function onDocumentMouseMove( event ) {
+
+            if ( isUserInteracting === true ) {
+                //scene.rotation.x=curentX;
+                scene.rotation.y=curentX;
+                curentX +=event.clientX*0.0001;
+                curentY +=event.clientY*0.01;
+            }
+
+        }
+        //鼠标弹起
+        function onDocumentMouseUp( event ) {
+
+            isUserInteracting = false;
+
+        }
+        //鼠标滚轮滚动
+        function onDocumentMouseWheel( event ) {
+
+            camera.fov += event.deltaY * 0.5;
+            camera.updateProjectionMatrix();
+
+        }
+        render();
+    }
+    window.onload = init;
+
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>three.js webgl - equirectangular panorama</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            background-color: #000000;
+            margin: 0px;
+            overflow: hidden;
+        }
+
+        #info {
+            position: absolute;
+            top: 0px; width: 100%;
+            color: #ffffff;
+            padding: 5px;
+            font-family:Monospace;
+            font-size:13px;
+            font-weight: bold;
+            text-align:center;
+        }
+
+        a {
+            color: #ffffff;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="container"></div>
+<div id="info">
+</div>
+
+<script src="../build/three.min.js"></script>
+<script src="../build/V-R.js"></script>
+<script>
+
+    var scene, renderer;
+    var container, mesh;
+
+    init();//初始化
+    animate();//动画
+
+    function init() {
+        V_R.init();
+
+
+        container = document.getElementById( 'container' );
+
+        scene = new THREE.Scene();
+
+
+
+        var envLight=new THREE.AmbientLight(0xffffff,0.5);
+        scene.add(envLight);
+
+
+
+        light = new THREE.DirectionalLight(0xffffff, 1.0, 0);//设置平行光源
+        light.position.set( 400, 700, -800 );//设置光源向量
+        scene.add( light );
+
+        var geometry = new THREE.SphereGeometry( 50, 60, 40 );
+
+        var material = new THREE.MeshLambertMaterial( {
+            map: new THREE.TextureLoader().load( 'textures/land_ocean_ice_cloud_2048.jpg' )
+        } );
+
+        mesh = new THREE.Mesh( geometry, material );
+        mesh.position.set(200,0,200);
+        scene.add( mesh );
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        container.appendChild( renderer.domElement );
+        window.addEventListener( 'resize', function() {
+
+            renderer.setSize( window.innerWidth, window.innerHeight );
+        }, false );
+
+
+    }
+    function animate() {
+        document.getElementById("info").innerHTML ="alpha:"+parseInt(V_R._alpha)+",beta:"+parseInt(V_R._beta)+",gama:"+parseInt(V_R._gamma)+",gammaFace:"+V_R._gammaFace;
+        requestAnimationFrame( animate );
+        update();
+
+    }
+
+
+    function update() {
+
+        mesh.rotation.y += 0.01;
+        V_R.update(scene,renderer);
+    }
+
+</script>
+
+</body>
+</html>
