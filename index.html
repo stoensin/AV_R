@@ -324,7 +324,7 @@
 
 					links[ file ] = link;
 
-				} )( section[ i ] );
+				} )( '/examples/'+section[ i ] );
 
 			}
 
@@ -332,7 +332,7 @@
 
 		function loadFile( file ) {
 			selectFile( file );
-			viewer.src = 'examples/'+file + '.html';
+			viewer.src = file + '.html';
 
 		}
 
