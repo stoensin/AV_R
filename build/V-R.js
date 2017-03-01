@@ -62,7 +62,8 @@ var V_R={
             view.camera = camera;
         }
         /*create camera*/
-
+        document.body.style.padding="0px";
+        document.body.style.margin='0px';
         this._bindEvent();
     },
     /*
