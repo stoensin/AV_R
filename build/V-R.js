@@ -4,7 +4,7 @@
 var V_R={
     inclinationAngle:36,
     views : {
-        left: [0.004,0.504],
+        left: [0.0,0.508],
         bottom: [0.0,0.0],
         width: [0.496,0.496],
         height: [1.0,1.0],
