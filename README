@@ -23,6 +23,14 @@ V_R={
         far:10000,
         camera:[]
     },
-    helper:{'msg':'观看VR请打开手机横屏模式'},
+    helper:{
+        'isPC':{
+            'tip':'',
+        },'isHorizontal':{
+            'tip':'',
+        },'isVertical':{
+            'tip':''
+        }
+    },
 }
 note! Need to set parameters before V_R.init()

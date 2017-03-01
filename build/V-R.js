@@ -17,7 +17,13 @@ var V_R={
         far:10000,
         camera:[]
     },
-    helper:{'msg':'观看VR请打开手机横屏模式'},
+    helper:{'isPC':{
+        'tip':'',
+    },'isHorizontal':{
+        'tip':'',
+    },'isVertical':{
+        'tip':''
+    }},
     _alpha:0,
     _beta:0,
     _gamma:0,
@@ -96,11 +102,12 @@ var V_R={
         }else {
 
             if (this._mobileDevice()) {
-                this._msgTip.innerHTML=this.helper.msg;
+                this._msgTip.innerHTML=this.helper.isVertical.tip;
                 target.x = Math.sin(THREE.Math.degToRad(this._alpha));
                 target.y = Math.sin(THREE.Math.degToRad(this._beta - this.inclinationAngle));
                 target.z = Math.cos(THREE.Math.degToRad(this._alpha));
             } else {
+                this._msgTip.innerHTML=this.helper.isPC.tip;
                 var lat = Math.max(-85, Math.min(85, this._lat));
                 var phi = THREE.Math.degToRad(90 - this._lat);
                 var theta = THREE.Math.degToRad(this._lon);
