@@ -45,6 +45,7 @@
     animate();//动画
 
     function init() {
+        V_R.views.background=new THREE.Color().setRGB(0, 0, 0);
         V_R.init();
 
 
@@ -73,6 +74,7 @@
         mesh.position.set(200,0,200);
         scene.add( mesh );
 
+
         renderer = new THREE.WebGLRenderer();
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( window.innerWidth, window.innerHeight );
@@ -85,7 +87,7 @@
 
     }
     function animate() {
-        document.getElementById("info").innerHTML ="alpha:"+parseInt(V_R._alpha)+",beta:"+parseInt(V_R._beta)+",gama:"+parseInt(V_R._gamma)+",gammaFace:"+V_R._gammaFace;
+        //document.getElementById("info").innerHTML ="alpha:"+parseInt(V_R._alpha)+",beta:"+parseInt(V_R._beta)+",gama:"+parseInt(V_R._gamma)+",gammaFace:"+V_R._gammaFace;
         requestAnimationFrame( animate );
         update();
 
@@ -93,10 +95,16 @@
 
 
     function update() {
-
         mesh.rotation.y += 0.01;
         V_R.update(scene,renderer);
     }
+
+
+    function randomRange(min, max) {
+        return Math.random()*(max-min) + min;
+    }
+
+
 
 </script>
 

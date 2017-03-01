@@ -28,6 +28,7 @@
     // 当页面加载完成时运行初始化函数, 完成绘制
     function init() {
 
+        V_R.inclinationAngle=80;
         V_R.init();
         var mesh1,distance=40;
 
@@ -38,7 +39,7 @@
 
         // 创建一个平面层
         var planeGeometry = new THREE.PlaneGeometry(60, 60);
-        var texture=new THREE.TextureLoader().load("textures/hardwood2_diffuse.jpg");//加载纹理图片
+        var texture=new THREE.TextureLoader().load("textures/lavatile.jpg");//加载纹理图片
         var planeMaterial = new THREE.MeshLambertMaterial({map:texture});
         var plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
@@ -62,15 +63,16 @@
         //camera.lookAt(scene.position);
 
         //添加环境光
-        var envLight=new THREE.AmbientLight(0xffffff,0.5);
+        var envLight=new THREE.AmbientLight(0xffffff,0.7);
         scene.add(envLight);
 
         // 添加聚光灯
         var spotLight = new THREE.SpotLight(0xffffff, 1,300,2);
         //var spotLight=new THREE.DirectionalLight(0xffffff,1)
-        spotLight.position.set(360, 260, -460);
+        spotLight.position.set(0, 20, 20);
         spotLight.castShadow = true;
         spotLight.shadow.camera.zoom=1;
+
 
         mixer = new THREE.AnimationMixer( scene );
         var loader = new THREE.JSONLoader();
@@ -83,7 +85,7 @@
             // random placement in a grid
             mesh1 = new THREE.Mesh( geometry, faceMaterial );
             mesh1.scale.set( 0.01, 0.01, 0.01 );
-            mesh1.position.set( distance, -10, 0 );
+            mesh1.position.set( distance, -4, 0 );
             //mesh.rotation.y = THREE.Math.randFloat( -0.25, 0.25 );
             mesh1.rotation.y =Math.PI;
             mesh1.matrixAutoUpdate = true;

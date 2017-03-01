@@ -5,3 +5,24 @@ Alternatively see [how to build the library yourself](https://github.com/mrdoob/
 
 ```html
 <script src="js/three.min.js"></script>
+
+External parameters
+V_R={
+    inclinationAngle:36,/*Set the angle of view, beta (vertical screen) or gamma (horizontal screen)*/
+    views : {
+        left: [0.004,0.504],
+        bottom: [0.0,0.0],
+        width: [0.496,0.496],
+        height: [1.0,1.0],
+        background: new THREE.Color().setRGB(0.5, 0.5, 0.7),
+        eye: [[-0.035, 0, 0],[0.035, 0, 0]], /*left carame position*/
+        viewAngleOffset:[-4.0,4.0],
+        up: [0, 1, 0],
+        fov: 75,
+        near:1,
+        far:10000,
+        camera:[]
+    },
+    helper:{'msg':'观看VR请打开手机横屏模式'},
+}
+note! Need to set parameters before V_R.init()

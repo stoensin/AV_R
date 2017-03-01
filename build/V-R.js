@@ -4,16 +4,20 @@
 var V_R={
     inclinationAngle:36,
     views : {
-        left: [0,0.5],
-        bottom: [0,0],
-        width: [0.5,0.5],
+        left: [0.004,0.504],
+        bottom: [0.0,0.0],
+        width: [0.496,0.496],
         height: [1.0,1.0],
         background: new THREE.Color().setRGB(0.5, 0.5, 0.7),
         eye: [[-0.035, 0, 0],[0.035, 0, 0]], /*left carame position*/
+        viewAngleOffset:[-4.0,4.0],
         up: [0, 1, 0],
         fov: 75,
+        near:1,
+        far:10000,
         camera:[]
     },
+    helper:{'msg':'观看VR请打开手机横屏模式'},
     _alpha:0,
     _beta:0,
     _gamma:0,
@@ -23,16 +27,18 @@ var V_R={
     _windowHeight:window.innerHeight,
     _gammaFace:0,
     _playVR:false,
+    _msgTip:null,
     /*
     init camera param
     **/
     init:function () {
         this._playVR=this._mobileDevice() & this._isCrossScreen();
         //this._playVR=1;
+        this._msgTip=this._tip();
         var view=this.views;
         if(this._playVR){
             for (var ii =  0; ii < 2; ii++ ) {
-                var camera = new THREE.PerspectiveCamera( view.fov, this._windowWidth / this._windowHeight, 1, 10000 );
+                var camera = new THREE.PerspectiveCamera( view.fov, this._windowWidth / this._windowHeight, view.near, view.far );
                 //console.log(new THREE.PerspectiveCamera( view.fov, window.innerWidth / window.innerHeight, 1, 10000 ));
                 camera.position.set(view.eye[ii][ 0 ],view.eye[ii][ 1 ],view.eye[ii][ 2 ]);
                 camera.up.x = view.up[ 0 ];
@@ -47,7 +53,7 @@ var V_R={
             this.views.height=1.0;
             this.views.bottom=0;
             this.views.eye=[0, 0, 0];
-            var camera = new THREE.PerspectiveCamera( view.fov, this._windowWidth / this._windowHeight, 1, 10000 );
+            var camera = new THREE.PerspectiveCamera( view.fov, this._windowWidth / this._windowHeight, view.near, view.far );
             //console.log(new THREE.PerspectiveCamera( view.fov, window.innerWidth / window.innerHeight, 1, 10000 ));
             camera.position.set(view.eye[ 0 ],view.eye[ 1 ],view.eye[ 2 ]);
             camera.up.x = view.up[ 0 ];
@@ -68,11 +74,11 @@ var V_R={
         var target = new THREE.Vector3(0, 0, 0);
 
         if (this._playVR) {
-            target.x = Math.sin(THREE.Math.degToRad(this._alpha ));
+
             target.y = Math.sin(THREE.Math.degToRad(-this._gamma -this.inclinationAngle)) ;
             target.z = Math.cos(THREE.Math.degToRad(this._alpha));
             for ( var i = 0; i < 2; i++ ) {
-
+                target.x = Math.sin(THREE.Math.degToRad(this._alpha+view.viewAngleOffset[i]));
                 view.camera[i].lookAt(target);
                 var left   = Math.floor( this._windowWidth  * view.left[i] );
                 var bottom = Math.floor( this._windowHeight * view.bottom[i] );
@@ -89,6 +95,7 @@ var V_R={
         }else {
 
             if (this._mobileDevice()) {
+                this._msgTip.innerHTML=this.helper.msg;
                 target.x = Math.sin(THREE.Math.degToRad(this._alpha));
                 target.y = Math.sin(THREE.Math.degToRad(this._beta - this.inclinationAngle));
                 target.z = Math.cos(THREE.Math.degToRad(this._alpha));
@@ -230,6 +237,20 @@ var V_R={
     /*
     Determine the mobile phone screen state
     */
+    _tip:function () {
+        var tipobj=document.createElement('div');
+        tipobj.style.position='absolute';
+        tipobj.style.top="0px";
+        tipobj.style.width='100%';
+        tipobj.style.color="#ffffff";
+        tipobj.style.padding="5px";
+        tipobj.style.fontFamily="Monospace";
+        tipobj.style.fontSize="13px";
+        tipobj.style.fontWeight="bold";
+        tipobj.style.textAlign="center";
+        document.body.appendChild(tipobj);
+        return tipobj;
+    },
     _isCrossScreen:function(){
         if(window.orientation==180||window.orientation==0){
             /*Vertical screen*/
