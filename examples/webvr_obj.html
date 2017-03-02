@@ -27,11 +27,11 @@
 
     // 当页面加载完成时运行初始化函数, 完成绘制
     function init() {
-
-        V_R.helper.isPC.tip="请使用手机查看VR模式";
-        V_R.helper.isVertical.tip='请打开手机屏幕旋转并装入VR盒子';
-        V_R.inclinationAngle=80;
-        V_R.init();
+        var VR=new V_R();
+        VR.helper.isPC.tip="请使用手机查看VR模式";
+        VR.helper.isVertical.tip='请打开手机屏幕旋转并装入VR盒子';
+        VR.inclinationAngle=80;
+        VR.init();
         var mesh1,distance=40;
 
         // 首先创建一个场景，各种元素都将添加到场景
@@ -126,7 +126,7 @@
             mesh1.position.x=distance;
             distance -=0.1;
             if(distance<=20) distance=40;
-            V_R.update(scene,renderer);
+            VR.update(scene,renderer);
         }
 
         render();

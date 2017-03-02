@@ -5,6 +5,8 @@ github:https://github.com/guoguicheng/AV_R.git
 <script src="build/three.min.js"></script>
 <script src="build/V_R.js"></script>
 
+var VR=new V_R();
+VR.inclinationAngle=45;
 //External parameters
 V_R={
     inclinationAngle:36,/*Set the angle of view, beta (vertical screen) or gamma (horizontal screen)*/
@@ -33,4 +35,5 @@ V_R={
     },
 }
 //note! Need to set parameters before V_R.init()
+
 V_R.update(scene,renderer);//update

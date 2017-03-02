@@ -39,7 +39,7 @@
 <script>
 
     var scene, renderer;
-
+    var VR;
     init();//初始化
     animate();//动画
 
@@ -47,9 +47,11 @@
 
         var container, mesh;
 
-        V_R.helper.isPC.tip="请使用手机查看VR模式";
-        V_R.helper.isVertical.tip='请打开手机屏幕旋转并装入VR盒子';
-        V_R.init();
+        VR=new V_R();
+
+        VR.helper.isPC.tip="请使用手机查看VR模式";
+        VR.helper.isVertical.tip='请打开手机屏幕旋转并装入VR盒子';
+        VR.init();
 
         container = document.getElementById( 'container' );
 
@@ -90,7 +92,7 @@
     }
 
     function update() {
-        V_R.update(scene,renderer);
+        VR.update(scene,renderer);
     }
 
 </script>
