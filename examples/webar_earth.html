@@ -38,7 +38,7 @@
 <script src="../build/A-R.js"></script>
 <script>
 
-    var scene, renderer;
+    var scene, renderer,camera;
     var container, mesh;
 
     init();//初始化
@@ -48,6 +48,7 @@
         var ar=new A_R();
         ar.init();//初始化AR
 
+        camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 1, 10000 );
 
         container = document.getElementById( 'container' );
 
@@ -69,7 +70,7 @@
         } );
 
         mesh = new THREE.Mesh( geometry, material );
-        mesh.position.set(200,0,200);
+        mesh.position.set(0,0,-200);
         scene.add( mesh );
 
         ar.arScene(scene); //设置AR场景
@@ -93,7 +94,7 @@
 
     function update() {
         mesh.rotation.y += 0.01;
-        renderer.update(scene,camera);
+        renderer.render(scene, camera);
     }
 
 
