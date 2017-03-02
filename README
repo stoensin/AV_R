@@ -1,4 +1,4 @@
-### Usage ###
+### VR Usage ###
 
 github:https://github.com/guoguicheng/AV_R.git
 
@@ -38,3 +38,14 @@ V_R={
 //note! Need to set parameters before V_R.init()
 
 V_R.update(scene,renderer);//update
+
+### AR Usage ###
+var ar=new A_R();
+ar.showTip=true;
+A_R={
+    showTip:false,
+    frontCamera:false,
+    constraints={}
+}
+ar.init()
+ar.arScene(scene)
