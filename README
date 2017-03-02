@@ -33,6 +33,7 @@ V_R={
             'tip':''
         }
     },
+    showTip:false
 }
 //note! Need to set parameters before V_R.init()
 

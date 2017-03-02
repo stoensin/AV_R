@@ -24,6 +24,7 @@ var V_R=function () {
     },'isVertical':{
         'tip':''
     }};
+    this.showTip=false;
     this._alpha=0;
     this._beta=0;
     this._gamma=0;
@@ -251,6 +252,8 @@ V_R.prototype._tip=function () {
     tipobj.style.fontSize="13px";
     tipobj.style.fontWeight="bold";
     tipobj.style.textAlign="center";
+    if(!this.showTip) tipobj.style.display="none";
+    else tipobj.style.display="";
     document.body.appendChild(tipobj);
     return tipobj;
 };
