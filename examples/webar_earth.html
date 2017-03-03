@@ -40,12 +40,15 @@
 
     var scene, renderer,camera;
     var container, mesh;
-
+    var target = new THREE.Vector3(0, 0, 0);
+    var ar=new A_R();
+    ar.showTip=true;
     init();//初始化
     animate();//动画
 
+
     function init() {
-        var ar=new A_R();
+
         ar.init();//初始化AR
 
         camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 1, 10000 );
@@ -54,7 +57,7 @@
 
         scene = new THREE.Scene();
 
-        var envLight=new THREE.AmbientLight(0xffffff,0.5);
+        var envLight=new THREE.AmbientLight(0xffffff,1);
         scene.add(envLight);
 
 
@@ -93,6 +96,14 @@
     }
 
     function update() {
+        if(ar.isMobileDevice()) {
+            ar._msgTip.style.color="red";
+            ar._msgTip.innerHTML="请旋转视角";
+            target.x = Math.sin(THREE.Math.degToRad(ar._alpha));
+            target.y = Math.sin(THREE.Math.degToRad(ar._beta - ar.inclinationAngle));
+            target.z = Math.cos(THREE.Math.degToRad(ar._alpha));
+            camera.lookAt(target);
+        }
         mesh.rotation.y += 0.01;
         renderer.render(scene, camera);
     }

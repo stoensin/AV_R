@@ -2,11 +2,19 @@
  * Created by GGC on 2017/2/24.
  */
 var A_R=function () {
+
+    this.showTip=false;
+    this.frontCamera=false;//true为前置摄像头，否则为后置
+    this.constraints={};
+    this.video=null;
+    this.inclinationAngle=36;
+    this._alpha=0;
+    this._beta=0;
+    this._gamma=0;
+    this._gammaFace=0;
     this._windowWidth=window.innerWidth;
     this._windowHeight=window.innerHeight;
-    this.showTip=false;
-    this.frontCamera=false;
-    this.constraints={};
+    this._bindEvent();
     document.body.style.padding="0px";
     document.body.style.margin="0px";
     document.body.style.overflow="hidden";
@@ -14,8 +22,6 @@ var A_R=function () {
 
 };
 
-A_R.prototype.cameraType=1; //0为前置摄像头，1为后置
-A_R.prototype.video=null;
 A_R.prototype.init=function () {
     var self=this;
 
@@ -31,7 +37,7 @@ A_R.prototype.init=function () {
         video: {
             width: {min: this._windowWidth, ideal: this._windowWidth, max: this._windowWidth},
             height: {min: this._windowWidth, ideal: this._windowWidth, max: this._windowWidth},
-            facingMode:(self.frontCamera?"user":"environment"),    // 使用前置/后置摄像头
+            facingMode:(self.frontCamera?"user":"environment"),    /* 使用前置/后置摄像头*/
             //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
             frameRate:{ideal:10,max:15}
         }
@@ -65,7 +71,7 @@ A_R.prototype.init=function () {
     navigator.mediaDevices.getUserMedia(self.constraints).then(
         function (stream) {
             // Older browsers may not have srcObject
-            if ("srcObject" in video) {
+            if ("srcObject" in self.video) {
                 self.video.srcObject = stream;
             } else {
                 // Avoid using this in new browsers, as it is going away.
@@ -134,4 +140,52 @@ A_R.prototype._tip=function () {
     document.body.appendChild(tipobj);
     return tipobj;
 };
+A_R.prototype._bindEvent=function(){
+    var that=this;
+    /* bind device orientation event */
+    if(window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', deviceorientation, false);
+    }
+    function deviceorientation(e){
+        that._gammaFace=(!that._gammaFace)?(e.gamma>0?1:-1):that._gammaFace;
+        that._alpha=e.alpha;
+        var t_beta=e.beta;
+        if(t_beta>90){
+            that._beta=90;
+        }else if(t_beta<-90){
+            that._beta=-90;
+        }else{
+            that._beta=e.beta;
+        }
+
+        if(that._gammaFace*e.gamma>0){
+            that._gamma = e.gamma;
+        }
+    }
+};
+A_R.prototype.isMobileDevice=function(deviceType) {
+    var sUserAgent = navigator.userAgent.toLowerCase();
+    if(deviceType){
+        return (sUserAgent.match(/ipad/i)|| sUserAgent.match(/iphone os/i) || sUserAgent.match(/midp/i) ||
+            sUserAgent.match(/rv:1.2.3.4/i) || sUserAgent.match(/ucweb/i) || sUserAgent.match(/android/i) ||
+            sUserAgent.match(/windows ce/i) || sUserAgent.match(/windows mobile/i))
+    }
+
+    var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+    var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+    var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+    var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+    var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+    var bIsAndroid = sUserAgent.match(/android/i) == "android";
+    var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+    if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+        //document.writeln("phone");
+        return true;
+    } else {
+        //document.writeln("pc");
+        return false;
+    }
+}
+
 

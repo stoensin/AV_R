@@ -7,17 +7,22 @@
     <script src="../build/A-R.js"></script>
 </head>
 <body>
+<br/>
+<br/>
+<br/>
+<br/>
 <input type="button" title="拍照" value="拍照" id="getPho" /><br />
 <input type="button" title="视频" value="视频" id="getVid" /><br />
 <script type="text/javascript">
     var ar=new A_R();
     ar.showTip=true;
+
     ar.init();
     document.getElementById("getPho").addEventListener('click', function (e) {
-        //ar.showPhoto();
+        ar.showPhoto();
     }, false);
     document.getElementById("getVid").addEventListener('click', function (e) {
-        //ar.showVedio();
+        ar.showVedio();
     }, false);
 </script>
 </body>

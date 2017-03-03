@@ -37,7 +37,7 @@ var V_R=function () {
     this._msgTip=null;
 };
 V_R.prototype.init=function () {
-    this._playVR=this._mobileDevice() & this._isCrossScreen();
+    this._playVR=this.isMobileDevice() & this._isCrossScreen();
     //this._playVR=1;
     this._msgTip=this._tip();
     var view=this.views;
@@ -97,7 +97,7 @@ V_R.prototype.update=function(scene,renderer) {
         }
     }else {
 
-        if (this._mobileDevice()) {
+        if (this.isMobileDevice()) {
             this._msgTip.innerHTML=this.helper.isVertical.tip;
             target.x = Math.sin(THREE.Math.degToRad(this._alpha));
             target.y = Math.sin(THREE.Math.degToRad(this._beta - this.inclinationAngle));
@@ -131,8 +131,14 @@ V_R.prototype.update=function(scene,renderer) {
 /*
  *check device types[mobile/PC]
  **/
-V_R.prototype._mobileDevice=function() {
+V_R.prototype.isMobileDevice=function(deviceType) {
     var sUserAgent = navigator.userAgent.toLowerCase();
+    if(deviceType){
+        return (sUserAgent.match(/ipad/i)|| sUserAgent.match(/iphone os/i) || sUserAgent.match(/midp/i) ||
+        sUserAgent.match(/rv:1.2.3.4/i) || sUserAgent.match(/ucweb/i) || sUserAgent.match(/android/i) ||
+        sUserAgent.match(/windows ce/i) || sUserAgent.match(/windows mobile/i))
+    }
+
     var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
     var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
     var bIsMidp = sUserAgent.match(/midp/i) == "midp";
@@ -148,7 +154,7 @@ V_R.prototype._mobileDevice=function() {
         //document.writeln("pc");
         return false;
     }
-},
+};
 /*
  *binding user interaction events
  **/
