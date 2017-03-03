@@ -40,6 +40,7 @@ V_R={
 V_R.update(scene,renderer);//update
 
 ### AR Usage ###
+<script src="build/A_R.js"></script>
 var ar=new A_R();
 ar.showTip=true;
 A_R={
